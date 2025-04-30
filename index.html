@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mini eCommerce</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>Mi Tienda</h1>
+
+  <div id="filters">
+    <input type="text" id="search" placeholder="Buscar productos..." />
+    <select id="categoryFilter">
+      <option value="">Todas las categorías</option>
+      <option value="Electrónica">Electrónica</option>
+      <option value="Ropa">Ropa</option>
+      <option value="Libros">Libros</option>
+    </select>
+  </div>
+
+  <div id="productList"></div>
+
+  <div class="cart">
+    <h2>Carrito de Compras</h2>
+    <ul id="cartList"></ul>
+    <p>Total sin IVA: $<span id="totalSinIVA">0</span></p>
+    <p>Total con IVA (21%): $<span id="totalConIVA">0</span></p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
