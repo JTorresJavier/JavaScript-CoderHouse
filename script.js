@@ -1,19 +1,39 @@
+// ✅ FUNCIONES CONSTRUCTORAS
+function Producto(id, nombre, precio, categoria) {
+  this.id = id;
+  this.nombre = nombre;
+  this.precio = precio;
+  this.categoria = categoria;
+}
+
+function ItemCarrito(producto) {
+  this.id = producto.id;
+  this.nombre = producto.nombre;
+  this.precio = producto.precio;
+}
+
+// ✅ ARRAY DE PRODUCTOS usando la función constructora
 const productos = [
-  { id: 1, nombre: "Laptop", precio: 200000, categoria: "Electrónica" },
-  { id: 2, nombre: "Remera", precio: 30000, categoria: "Ropa" },
-  { id: 3, nombre: "Libro de JS", precio: 15000, categoria: "Libros" },
-  { id: 4, nombre: "Auriculares", precio: 35000, categoria: "Electrónica" }
+  new Producto(1, "Laptop", 200000, "Electrónica"),
+  new Producto(2, "Remera", 30000, "Ropa"),
+  new Producto(3, "Libro de JS", 15000, "Libros"),
+  new Producto(4, "Auriculares", 35000, "Electrónica")
 ];
 
-let carrito = [];
+// ✅ ALMACENAMIENTO LOCAL
+let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+renderCarrito(); // Mostrar si ya hay datos en localStorage
 
+// ✅ DOM - Obtención de elementos
 const productList = document.getElementById("productList");
 const cartList = document.getElementById("cartList");
 const totalSinIVA = document.getElementById("totalSinIVA");
 const totalConIVA = document.getElementById("totalConIVA");
 const searchInput = document.getElementById("search");
 const categoryFilter = document.getElementById("categoryFilter");
+const btnVaciar = document.getElementById("vaciarCarrito");
 
+// ✅ FUNCIONES DE RENDER Y EVENTOS
 function renderProductos(lista) {
   productList.innerHTML = "";
   lista.forEach(p => {
@@ -29,28 +49,58 @@ function renderProductos(lista) {
   });
 }
 
+// ✅ Agregar al carrito
 function agregarAlCarrito(id) {
   const producto = productos.find(p => p.id === id);
   if (producto) {
-    carrito.push(producto);
+    carrito.push(new ItemCarrito(producto));
+    guardarCarrito(); // actualizar localStorage
     renderCarrito();
   }
 }
 
+// ✅ Vaciar carrito (DOM + evento)
+btnVaciar.addEventListener("click", () => {
+  carrito = [];
+  guardarCarrito();
+  renderCarrito();
+});
+
+// ✅ Mostrar carrito + eliminar productos individualmente
 function renderCarrito() {
   cartList.innerHTML = "";
   let total = 0;
-  carrito.forEach(p => {
+
+  carrito.forEach((p, index) => {
     const li = document.createElement("li");
-    li.textContent = `${p.nombre} - $${p.precio}`;
+    li.innerHTML = `
+      ${p.nombre} - $${p.precio}
+      <button class="eliminar-item" data-index="${index}">❌</button>
+    `;
     cartList.appendChild(li);
     total += p.precio;
   });
 
   totalSinIVA.textContent = total.toFixed(2);
   totalConIVA.textContent = (total * 1.21).toFixed(2);
+
+  // ✅ Evento eliminar producto individual
+  document.querySelectorAll(".eliminar-item").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const index = parseInt(btn.dataset.index);
+      carrito.splice(index, 1);
+      guardarCarrito();
+      renderCarrito();
+    });
+  });
 }
 
+// ✅ Guardar carrito en localStorage
+function guardarCarrito() {
+  localStorage.setItem("carrito", JSON.stringify(carrito));
+}
+
+// ✅ Buscar y filtrar productos (funciones del orden superior)
 function filtrarYBuscar() {
   const texto = searchInput.value.toLowerCase();
   const categoria = categoryFilter.value;
@@ -64,9 +114,9 @@ function filtrarYBuscar() {
   renderProductos(filtrados);
 }
 
-// Eventos
+// ✅ EVENTOS
 searchInput.addEventListener("input", filtrarYBuscar);
 categoryFilter.addEventListener("change", filtrarYBuscar);
 
-// Inicial
+// ✅ INICIAL
 renderProductos(productos);

@@ -47,4 +47,27 @@ body {
     padding: 15px;
     border-radius: 4px;
   }
+
+  #vaciarCarrito {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  #vaciarCarrito:hover {
+    background-color: #c82333;
+  }
+  
+  .eliminar-item {
+    margin-left: 10px;
+    background-color: #ffc107;
+    border: none;
+    padding: 2px 5px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
   
